@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MVP.BusinessComponents\MVP.BusinessComponents.csproj" />
+    <ProjectReference Include="..\MVP.BusinessEntities\MVP.BusinessEntities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DataAccessPlugin">
+      <HintPath>..\Dlls\DataAccessPlugin.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

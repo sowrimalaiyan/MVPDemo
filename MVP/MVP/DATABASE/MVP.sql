@@ -1,0 +1,904 @@
+IF NOT EXISTS(SELECT * FROM sys.databases WHERE [Name] = 'MVP')
+BEGIN
+	CREATE DATABASE MVP
+END
+
+USE MVP
+GO
+
+IF NOT EXISTS(SELECT * FROM sys.tables WHERE [Name] = 'SKILL')
+BEGIN
+	CREATE TABLE SKILL
+	(
+		Id				UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,
+		Name			VARCHAR(200),
+		Description		NVARCHAR(MAX),
+		IsActive		BIT DEFAULT(1),
+		CreatedBy		UNIQUEIDENTIFIER,
+		CreatedAt		DATETIME  DEFAULT(GETDATE()),
+		UpdatedBy		UNIQUEIDENTIFIER,
+		UpdatedAt		DATETIME  DEFAULT(GETDATE())
+	)
+END
+GO
+SELECT * FROM SKILL
+
+IF NOT EXISTS(SELECT * FROM sys.tables WHERE [Name] = 'EMPLOYEE')
+BEGIN
+	CREATE TABLE EMPLOYEE
+	(	
+		Id			UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,
+		Name		VARCHAR(50)     NOT NULL,
+		PhoneNo     BIGINT,
+		IsAdmin		BIT DEFAULT(0),
+		IsActive	BIT DEFAULT(1),
+		CreatedBy	UNIQUEIDENTIFIER,
+		CreatedAt	DATETIME  DEFAULT(GETDATE()),
+		UpdatedBy	UNIQUEIDENTIFIER,
+		UpdatedAt	DATETIME  DEFAULT(GETDATE())
+	)
+END
+GO
+SELECT * FROM EMPLOYEE
+
+IF NOT EXISTS(SELECT * FROM sys.tables WHERE [Name] = 'EMPLOYEESKILLS')
+BEGIN
+	CREATE TABLE EMPLOYEESKILLS
+	(	
+		Id			UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,
+		EmpId       UNIQUEIDENTIFIER FOREIGN KEY REFERENCES EMPLOYEE(Id) NOT NULL,
+		SkillId     UNIQUEIDENTIFIER FOREIGN KEY REFERENCES SKILL(Id) NOT NULL,
+		IsActive	BIT DEFAULT(1),
+		CreatedBy	UNIQUEIDENTIFIER,
+		CreatedAt	DATETIME  DEFAULT(GETDATE()),
+		UpdatedBy	UNIQUEIDENTIFIER,
+		UpdatedAt	DATETIME  DEFAULT(GETDATE())
+	)
+END
+GO
+SELECT * FROM EMPLOYEESKILLS
+
+IF NOT EXISTS(SELECT * FROM sys.tables WHERE [Name] = 'JOBS')
+BEGIN
+	CREATE TABLE JOBS
+	(	
+		Id			UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,
+		Name		VARCHAR(200),
+		Description	NVARCHAR(MAX),
+		IsActive	BIT DEFAULT(1),
+		CreatedBy	UNIQUEIDENTIFIER,
+		CreatedAt	DATETIME  DEFAULT(GETDATE()),
+		UpdatedBy	UNIQUEIDENTIFIER,
+		UpdatedAt	DATETIME  DEFAULT(GETDATE())
+	)
+END
+GO
+SELECT * FROM JOBS
+
+IF NOT EXISTS(SELECT * FROM sys.tables WHERE [Name] = 'JOBSKILLS')
+BEGIN
+	CREATE TABLE JOBSKILLS
+	(	
+		Id			UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,
+		JobId       UNIQUEIDENTIFIER FOREIGN KEY REFERENCES JOBS(Id) NOT NULL,
+		SkillId     UNIQUEIDENTIFIER FOREIGN KEY REFERENCES SKILL(Id) NOT NULL,
+		IsActive	BIT DEFAULT(1),
+		CreatedBy	UNIQUEIDENTIFIER,
+		CreatedAt	DATETIME  DEFAULT(GETDATE()),
+		UpdatedBy	UNIQUEIDENTIFIER,
+		UpdatedAt	DATETIME  DEFAULT(GETDATE())
+	)
+END
+GO
+SELECT * FROM JOBSKILLS
+
+IF NOT EXISTS(SELECT * FROM sys.types WHERE name = 'UDT_Skill' AND is_table_type = 1)
+BEGIN
+	CREATE TYPE UDT_Skill AS TABLE  
+	(  
+		Id				UNIQUEIDENTIFIER
+	) 
+END
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_insertskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_insertskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_insertskill
+(
+	@Id				UNIQUEIDENTIFIER,
+	@Name			VARCHAR(200),
+	@Description	NVARCHAR(MAX),
+	@CreatedBy		UNIQUEIDENTIFIER,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+
+	SET NOCOUNT ON;
+
+	INSERT INTO SKILL
+	(
+		Id,
+		Name,			
+		Description,	
+		CreatedBy,		
+		UpdatedBy		
+	)
+	VALUES
+	(
+		@Id,
+		@Name,			
+		@Description,	
+		@CreatedBy,		
+		@UpdatedBy	
+	)
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_updateskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_updateskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_updateskill
+(
+	@Id				UNIQUEIDENTIFIER,
+	@Name			VARCHAR(200),
+	@Description	NVARCHAR(MAX),
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+
+	SET NOCOUNT ON;
+
+	UPDATE SKILL 
+		SET Name = @Name,
+			Description = @Description,
+			UpdatedBy = @UpdatedBy,
+			UpdatedAt = GETDATE()
+		WHERE Id = @Id
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_deleteskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_deleteskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_deleteskill
+(
+	@Id				UNIQUEIDENTIFIER,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+
+	SET NOCOUNT ON;
+
+	UPDATE SKILL 
+		SET IsActive = 0,
+			UpdatedBy = @UpdatedBy,
+			UpdatedAt = GETDATE()
+		WHERE Id = @Id
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_getskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_getskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_getskill
+(
+	@Id				UNIQUEIDENTIFIER = NULL,
+	@Name			VARCHAR(200) = NULL,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	SET NOCOUNT ON;
+
+	SELECT Id, Name, Description, IsActive, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt 
+	FROM SKILL 
+	WHERE (@Id IS NULL OR Id = @Id) AND (@Name IS NULL OR Name like '%' + @Name + '%')
+
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_insertemployee')
+BEGIN
+	 DROP PROCEDURE dbo.usp_insertemployee
+END
+GO
+
+CREATE PROCEDURE dbo.usp_insertemployee
+(
+	@Id			UNIQUEIDENTIFIER,
+	@Name		VARCHAR(50),
+	@PhoneNo    BIGINT,
+	@IsAdmin    BIT,
+	@CreatedBy	UNIQUEIDENTIFIER,
+	@UpdatedBy	UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+	SET NOCOUNT ON;
+
+	INSERT INTO Employee
+	(
+		Id,			
+		Name, 
+		PhoneNo,   
+		IsAdmin,
+		CreatedBy,	
+		UpdatedBy		
+	)
+	VALUES
+	(
+		@Id,			
+		@Name,
+		@PhoneNo,   
+		@IsAdmin,
+		@CreatedBy,	
+		@UpdatedBy	
+	)
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_updateemployee')
+BEGIN
+	 DROP PROCEDURE dbo.usp_updateemployee
+END
+GO
+
+CREATE PROCEDURE dbo.usp_updateemployee
+(
+	@Id				UNIQUEIDENTIFIER,
+	@Name			VARCHAR(50),
+	@PhoneNo		BIGINT,
+	@IsAdmin		BIT,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+	SET NOCOUNT ON;
+
+	UPDATE Employee 
+	SET
+		Name = @Name,  
+		PhoneNo = @PhoneNo,
+		IsAdmin = @IsAdmin,
+		UpdatedBy = @UpdatedBy,
+		UpdatedAt = GETDATE()
+	WHERE Id = @Id
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_deleteemployee')
+BEGIN
+	 DROP PROCEDURE dbo.usp_deleteemployee
+END
+GO
+
+CREATE PROCEDURE dbo.usp_deleteemployee
+(
+	@Id				UNIQUEIDENTIFIER,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+
+	SET NOCOUNT ON;
+
+	UPDATE Employee 
+	SET
+		IsActive = 0,
+		UpdatedBy = @UpdatedBy
+	WHERE Id = @Id
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_getemployee')
+BEGIN
+	 DROP PROCEDURE dbo.usp_getemployee
+END
+GO
+
+CREATE PROCEDURE dbo.usp_getemployee
+(
+	@Id				UNIQUEIDENTIFIER = NULL,
+	@Name			VARCHAR(200) = NULL,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	SET NOCOUNT ON;
+
+	SELECT  Id, Name, PhoneNo,IsAdmin, IsActive, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt	
+	FROM Employee 
+	WHERE (@Id IS NULL OR Id = @Id) AND (@Name IS NULL OR Name like '%' + @Name + '%')
+
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_insertjobs')
+BEGIN
+	 DROP PROCEDURE dbo.usp_insertjobs
+END
+GO
+
+CREATE PROCEDURE dbo.usp_insertjobs
+(
+	@Id				UNIQUEIDENTIFIER,
+	@Name			VARCHAR(200),
+	@Description	NVARCHAR(MAX),
+	@CreatedBy		UNIQUEIDENTIFIER,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+
+	SET NOCOUNT ON;
+
+	INSERT INTO jobs
+	(
+		Id,
+		Name,			
+		Description,	
+		CreatedBy,		
+		UpdatedBy		
+	)
+	VALUES
+	(
+		@Id,
+		@Name,			
+		@Description,	
+		@CreatedBy,		
+		@UpdatedBy	
+	)
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_updatejobs')
+BEGIN
+	 DROP PROCEDURE dbo.usp_updatejobs
+END
+GO
+
+CREATE PROCEDURE dbo.usp_updatejobs
+(
+	@Id				UNIQUEIDENTIFIER,
+	@Name			VARCHAR(200),
+	@Description	NVARCHAR(MAX),
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+
+	SET NOCOUNT ON;
+
+	UPDATE jobs 
+		SET Name = @Name,
+			Description = @Description,
+			UpdatedBy = @UpdatedBy,
+			UpdatedAt = GETDATE()
+		WHERE Id = @Id
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_deletejobs')
+BEGIN
+	 DROP PROCEDURE dbo.usp_deletejobs
+END
+GO
+
+CREATE PROCEDURE dbo.usp_deletejobs
+(
+	@Id				UNIQUEIDENTIFIER,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+
+	SET NOCOUNT ON;
+
+	UPDATE jobs 
+		SET IsActive = 0,
+			UpdatedBy = @UpdatedBy,
+			UpdatedAt = GETDATE()
+		WHERE Id = @Id
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_getjobs')
+BEGIN
+	 DROP PROCEDURE dbo.usp_getjobs
+END
+GO
+
+CREATE PROCEDURE dbo.usp_getjobs
+(
+	@Id				UNIQUEIDENTIFIER = NULL,
+	@Name			VARCHAR(200) = NULL,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+	SET NOCOUNT ON;
+
+	SELECT Id, Name, Description, IsActive, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt 
+	FROM jobs 
+	WHERE (@Id IS NULL OR Id = @Id) AND (@Name IS NULL OR Name like '%' + @Name + '%')
+
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_insertjobskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_insertjobskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_insertjobskill
+(
+	@Id				UNIQUEIDENTIFIER,
+	@Name			VARCHAR(200),
+	@Description	NVARCHAR(MAX),
+	@Skills			[UDT_Skill] READONLY,
+	@CreatedBy		UNIQUEIDENTIFIER,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+
+		EXEC dbo.usp_insertjobs @Id, @Name, @Description, @CreatedBy, @UpdatedBy, @PrimaryID, @ErrorMessage
+
+		INSERT INTO JOBSKILLS (Id, JobId, SkillId, CreatedBy)
+		SELECT NEWID(), @Id, Id, @CreatedBy FROM @Skills
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_updatejobskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_updatejobskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_updatejobskill
+(
+	@Id				UNIQUEIDENTIFIER,
+	@Name			VARCHAR(200),
+	@Description	NVARCHAR(MAX),
+	@Skills			[UDT_Skill] READONLY,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+
+		DELETE JOBSKILLS WHERE JobId = @Id
+
+		EXEC dbo.usp_updatejobs @Id, @Name, @Description, @UpdatedBy, @PrimaryID, @ErrorMessage
+
+		INSERT INTO JOBSKILLS (Id, JobId, SkillId, CreatedBy)
+		SELECT NEWID(), @Id, Id, @UpdatedBy FROM @Skills
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_deletejobskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_deletejobskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_deletejobskill
+(
+	@Id				UNIQUEIDENTIFIER,
+	@Skills			[UDT_Skill] READONLY,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+	SET NOCOUNT ON;
+
+		UPDATE JOBSKILLS 
+			SET IsActive = 0 
+		WHERE JobId = @Id
+
+		EXEC dbo.usp_deletejobs @Id, @UpdatedBy, @PrimaryID, @ErrorMessage
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_getjobskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_getjobskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_getjobskill
+(
+	@Id				UNIQUEIDENTIFIER = NULL,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+	SET NOCOUNT ON;
+
+		SELECT	JS.id AS JobSkillId, SK.Id, SK.Name, SK.Description, SK.IsActive, SK.CreatedBy, SK.CreatedAt, SK.UpdatedBy, SK.UpdatedAt  
+		FROM JOBSKILLS JS
+			INNER JOIN JOBS J ON J.Id = JS.JobId AND J.IsActive = 1
+			INNER JOIN SKILL SK ON SK.Id = JS.SkillId AND SK.IsActive = 1
+		WHERE JS.JobId = @Id AND JS.IsActive = 1
+
+		SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SELECT ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_insertemployeeskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_insertemployeeskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_insertemployeeskill
+(
+	@Id				UNIQUEIDENTIFIER,
+	@Name			VARCHAR(50),
+	@PhoneNo		BIGINT,
+	@IsAdmin		BIT,
+	@Skills			[UDT_Skill] READONLY,
+	@CreatedBy		UNIQUEIDENTIFIER,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+	SET NOCOUNT ON;
+
+		EXEC dbo.usp_insertemployee @Id, @Name, @PhoneNo, @IsAdmin, @CreatedBy, @UpdatedBy, @PrimaryID, @ErrorMessage
+
+		INSERT INTO EMPLOYEESKILLS (Id, EmpId, SkillId, CreatedBy)
+		SELECT NEWID(), @Id, Id, @CreatedBy FROM @Skills
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_updateemployeeskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_updateemployeeskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_updateemployeeskill
+(
+	@Id				UNIQUEIDENTIFIER,
+	@Name			VARCHAR(50),
+	@PhoneNo		BIGINT,
+	@IsAdmin		BIT,
+	@Skills			[UDT_Skill] READONLY,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+	SET NOCOUNT ON;
+
+		DELETE EMPLOYEESKILLS WHERE EmpId = @Id
+
+		EXEC dbo.usp_updateemployee @Id, @Name, @PhoneNo, @IsAdmin, @UpdatedBy, @PrimaryID, @ErrorMessage
+
+		INSERT INTO EMPLOYEESKILLS (Id, EmpId, SkillId, CreatedBy)
+		SELECT NEWID(), @Id, Id, @UpdatedBy FROM @Skills
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_deleteemployeeskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_deleteemployeeskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_deleteemployeeskill
+(
+	@Id				UNIQUEIDENTIFIER,
+	@UpdatedBy		UNIQUEIDENTIFIER,
+	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	Declare @EmptyGuid UNIQUEIDENTIFIER
+	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+	SET NOCOUNT ON;
+
+		UPDATE EMPLOYEESKILLS 
+			SET IsActive = 0 
+		WHERE EmpId = @Id
+
+		EXEC dbo.usp_deleteemployee @Id, @UpdatedBy, @PrimaryID, @ErrorMessage
+
+	SET @PrimaryID = @Id
+	SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SET @PrimaryID = @EmptyGuid
+	SET @ErrorMessage = ERROR_MESSAGE()
+END CATCH
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE  ROUTINE_SCHEMA = 'dbo' AND ROUTINE_NAME = 'usp_getemployeeskill')
+BEGIN
+	 DROP PROCEDURE dbo.usp_getemployeeskill
+END
+GO
+
+CREATE PROCEDURE dbo.usp_getemployeeskill
+(
+	@Id				UNIQUEIDENTIFIER,
+	@ErrorMessage	NVARCHAR(MAX) OUTPUT
+)
+AS BEGIN TRY
+	BEGIN TRAN
+
+	SET NOCOUNT ON;
+
+		SELECT	ES.Id AS EmployeeSkillId, SK.Id, SK.Name, SK.Description, SK.IsActive, SK.CreatedBy, SK.CreatedAt, SK.UpdatedBy, SK.UpdatedAt  
+		FROM EMPLOYEESKILLS ES
+			INNER JOIN EMPLOYEE E ON E.Id = ES.EmpId AND E.IsActive = 1
+			INNER JOIN SKILL SK ON SK.Id = ES.SkillId AND SK.IsActive = 1
+		WHERE ES.EmpId = @Id AND ES.IsActive = 1
+		
+		SET @ErrorMessage = ''
+
+	COMMIT TRAN 
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+	SELECT ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
+GO
