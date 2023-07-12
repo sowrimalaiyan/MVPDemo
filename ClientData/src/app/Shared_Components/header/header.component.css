@@ -1,0 +1,11 @@
+.header {
+    background-color: darkslateblue;
+    color: white;
+    padding: 10px 10px;
+}
+
+.profileImg{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}

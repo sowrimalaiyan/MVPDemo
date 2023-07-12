@@ -1,0 +1,44 @@
+[
+    {
+        "id":1,
+        "name": "Employee 1",
+        "phoneNo": 88765788989,
+        "skills":[
+            {
+                "id":1
+            },
+            {
+                "id":2
+            }
+        ]
+    },
+    {
+        "id":2,
+        "name": "Employee 2",
+        "phoneNo": 778865578,
+        "skills":[
+            {
+                "id":2
+            },
+            {
+                "id":3
+            }
+        ]
+    },
+    {
+        "id":3,
+        "name": "Employee 3",
+        "phoneNo": 998656789,
+        "skills":[
+            {
+                "id":1
+            },
+            {
+                "id":2
+            },
+            {
+                "id":3
+            }
+        ]
+    }
+]

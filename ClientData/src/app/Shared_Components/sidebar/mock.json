@@ -1,0 +1,38 @@
+[
+    {
+        "menu_id": 1,
+        "menu_name": "skill",
+        "menu_icon": "las la-chart-bar",
+        "menu_url": "skill",
+        "menu_display_name": "Skill",
+        "menu_isCollapsed": true,
+        "sub_menus": [],
+        "menu_order": "1",
+        "is_active": 1
+    },
+
+    {
+        "menu_id": 2,
+        "menu_name": "jobSkill",
+        "menu_icon": "las la-chart-bar",
+        "menu_url": "job",
+        "menu_display_name": "Job Skills",
+        "menu_isCollapsed": true,
+        "sub_menus": [],
+        "menu_order": "2",
+        "is_active": 1
+    },
+    {
+        "menu_id": 3,
+        "menu_name": "employeeSkill",
+        "menu_icon": "las la-university",
+        "menu_url": "employee",
+        "menu_action": null,
+        "menu_action_url": null,
+        "menu_display_name": "Employee Skills",
+        "sub_menus": [],
+        "menu_isCollapsed": true,
+        "menu_order": "3",
+        "is_active": 1
+    }
+]

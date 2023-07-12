@@ -1,0 +1,27 @@
+.menu {
+    background-color: white;
+    color: black;
+    height: 90vh;
+}
+
+.main-menu{
+    font-weight: 500;
+    color: grey;
+}
+
+.sub-menu{
+    color: grey;
+}
+
+.icon i{
+    color: blue;
+}
+
+.active {
+    font-weight: 500;
+    color: darkslateblue !important;
+}
+
+.active .icon i{
+    color: darkslateblue !important;
+}

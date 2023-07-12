@@ -1,0 +1,290 @@
+/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+.main {
+    display: flex;
+    position: relative;
+}
+
+.del-header {
+    background-color: #bb2d3b;
+    color: white;
+}
+
+.side-content {
+    width: 20% !important;
+}
+
+.main-content {
+    width: 80% !important;
+    border-left: 1px solid lightgray;
+
+}
+
+.slim-scroll,
+.p-datatable-wrapper {
+    scrollbar-color: #000000 #ffffff;
+    scrollbar-width: thin !important;
+}
+
+.slim-scroll::-webkit-scrollbar,
+.p-datatable-wrapper::-webkit-scrollbar {
+    width: 4px;
+    height: 10px;
+    border-radius: 20px;
+    background-color: transparent;
+}
+
+.slim-scroll::-webkit-scrollbar-thumb,
+.p-datatable-wrapper::-webkit-scrollbar-thumb {
+    background: #278ce8;
+    border-radius: 20px;
+}
+
+.p-datatable-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.p-datatable .p-sortable-column.p-highlight,
+.p-datatable .p-sortable-column.p-highlight:hover {
+    background: #c6e3fe !important;
+    color: #278ce8 !important;
+}
+
+.p-datatable .p-sortable-column:focus {
+    box-shadow: 0 0 0 0.25rem rgb(13, 110, 253, 0.25);
+}
+
+.p-datatable-wrapper {
+    overflow-x: auto;
+}
+
+.p-datatable .p-datatable-thead>tr>th {
+    position: sticky;
+    top: 0px;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    border-width: 0.1px;
+    color: #278ce8;
+    /*background: transparent;*/
+    padding: 0.2rem;
+    text-align: left;
+    z-index: 1;
+    box-shadow: inset 0 0.5px 0 #dee2e6, inset 0 -0.5px 0 #dee2e6 !important;
+    border: 0.1px solid #dee2e6 !important;
+}
+
+.p-datatable .p-datatable-thead>tr>th i {
+    color: #278ce8 !important;
+}
+
+.p-datatable .p-sortable-column:not(.p-highlight):hover {
+    color: #278ce8;
+}
+
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+    font-size: 10px;
+}
+
+.p-datatable .p-datatable-tbody>tr>td {
+    font-size: 12px;
+    border-width: 0.1px;
+    padding: 0.2rem;
+    text-align: left;
+}
+
+.p-datatable .p-datatable-tbody>tr>td i {
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.p-datatable .p-datatable-tbody>tr>td i.la-pen {
+    color: #278ce8;
+}
+
+.p-datatable .p-datatable-tbody>tr>td i.la-trash-alt {
+    color: #fb6f6f;
+}
+
+.p-datatable .p-sortable-column .p-sortable-column-badge {
+    display: none !important;
+    align-items: left;
+    justify-content: center;
+}
+
+.p-column-filter-menu-button span {
+    font-size: smaller;
+    color: #278ce8;
+}
+
+/* pagination */
+
+.p-paginator {
+    padding: 0.5rem 0;
+    justify-content: end !important;
+    display: flex !important;
+
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+    min-width: 22px;
+    height: 22px;
+    margin-bottom: 3px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-last {
+    min-width: 22px;
+    height: 22px;
+    font-size: 12px;
+    background-color: #f2f2f2;
+    border: 1px solid #d8d5d5;
+}
+
+.p-paginator .p-paginator-first span,
+.p-paginator .p-paginator-prev span,
+.p-paginator .p-paginator-next span,
+.p-paginator .p-paginator-last span {
+    font-size: 12px;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+    background-color: #f2f2f2;
+    border: 1px solid #d8d5d5;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background: #278ce8;
+    border-color: #278ce8;
+    color: #fff;
+}
+
+.p-paginator .p-dropdown {
+    height: 2rem;
+}
+
+.p-inputtext {
+    padding: 5px 5px;
+    font-size: 14px;
+}
+
+.p-paginator .p-dropdown .p-dropdown-label {
+    padding-right: 5px;
+}
+
+.p-dropdown .p-dropdown-trigger {
+    width: auto;
+    padding-right: 5px;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    color: #278ce8;
+    background: #e1f1ff;
+}
+
+.p-dropdown:not(.p-disabled):hover {
+    border-color: #ced4da;
+    box-shadow: none !important;
+}
+
+.p-button.p-button-icon-only {
+    width: 2rem;
+    padding: 5px 9px;
+    margin: 4px;
+}
+
+.p-multiselect {
+    width: 100%;
+    margin: auto;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+@media screen and (max-width: 700px) {
+
+    /* For mobile phones: */
+    [class*="col-"] {
+        width: 100%;
+    }
+
+    .navbar-brand img {
+        height: 35px;
+    }
+    .sidemenu.hide {
+        /* width: 55px; */
+        width: 280px;
+        height: 100vh;
+        display: block;
+    }
+    .sidemenu {
+        padding: 0.5rem 0 0.5rem 0.5rem;
+        position: absolute;
+        z-index: 99;
+        display: none;
+    }
+    .sidemenu>ul li a {
+        padding: 0.5rem 0.5rem;
+    }
+    .sidemenu>ul li a span {
+        display: inline-block;
+    }
+    .content.hide {
+        width: 100%;
+    }
+
+    .page-content {
+        width: 100%;
+        padding: 0.5rem;
+    }
+    .mobile-sidebar-backdrop {
+        display: none;
+        width: 100%;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        z-index: 98;
+    }
+    .backdrop-opened {
+        display: block !important;
+    }
+    /* div.content {
+        margin-left: 0;
+    } */
+}
+
+@media screen and (max-width: 430px) {
+
+    .main {
+        display: block;
+        position: relative;
+    }
+
+    .main-content {
+        width: 100% !important;    
+    }
+
+    .menu ul li a {
+        text-align: center;
+        float: none;
+    }
+}
