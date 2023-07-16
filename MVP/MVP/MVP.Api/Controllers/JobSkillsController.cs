@@ -51,7 +51,7 @@ namespace MVP.Api.Controllers
                     _logger.LogError(Obj.Errors.ErrorMessage);
                     return BadRequest(Obj.Errors.ErrorMessage);
                 }
-                return Ok(Obj.Data);
+                return Ok(Obj.Data.Where(obj => obj.IsActive).ToList());
             }
             catch (Exception ex)
             {
@@ -155,7 +155,7 @@ namespace MVP.Api.Controllers
 
         [HttpPost]
         [Route("delete")]
-        public async Task<ActionResult> DeleteAsync(Guid Id)
+        public async Task<ActionResult> DeleteAsync(SkillIdEntity entity)
         {
             try
             {
@@ -163,7 +163,7 @@ namespace MVP.Api.Controllers
                 {
                     Input = new JobSkillsEntity
                     {
-                        Id = Id,
+                        Id = entity.Id,
                         UpdatedBy = Guid.NewGuid()
                     },
                     ClientUserInfo = _clientInfo

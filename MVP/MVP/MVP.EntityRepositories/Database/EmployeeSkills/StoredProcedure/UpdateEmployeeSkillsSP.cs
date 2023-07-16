@@ -22,6 +22,8 @@ namespace MVP.EntityRepositories
 
         private Int64 InpPhoneNo { get; set; }
 
+        private DateTime InpHireDate { get; set; }
+
         private bool InpIsAdmin { get; set; }
 
         private Guid InpUpdatedBy { get; set; }
@@ -49,6 +51,7 @@ namespace MVP.EntityRepositories
             InpID = ObjRequestInput.Input.Id;
             InpName = ObjRequestInput.Input.Name;
             InpPhoneNo = ObjRequestInput.Input.PhoneNo;
+            InpHireDate = ObjRequestInput.Input.HireDate;
             InpIsAdmin = ObjRequestInput.Input.IsAdmin;
             InpUpdatedBy = ObjRequestInput.Input.UpdatedBy;
             InpSkills = ObjRequestInput.Input.SkillsDt;
@@ -63,6 +66,7 @@ namespace MVP.EntityRepositories
             AddInParameter("Id", ParamType.Guid, InpID);
             AddInParameter("Name", ParamType.String, InpName);
             AddInParameter("PhoneNo", ParamType.Int64, InpPhoneNo);
+            AddInParameter("HireDate", ParamType.Date, InpHireDate);
             AddInParameter("IsAdmin", ParamType.Boolean, InpIsAdmin);
             AddInParameter("UpdatedBy", ParamType.Guid, InpUpdatedBy);
             AddInParameter("Skills", ParamType.Structured, InpSkills);

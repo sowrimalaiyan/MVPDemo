@@ -17,6 +17,8 @@ namespace MVP.EntityRepositories
 
         private const string PhoneNo = "PhoneNo";
 
+        private const string HireDate = "HireDate";
+
         private const string IsAdmin = "IsAdmin";
 
         private const string IsActive = "IsActive";
@@ -161,6 +163,7 @@ namespace MVP.EntityRepositories
                 Id = HandleOutputParamValue<Guid>.Get(reader, Id),
                 Name = HandleOutputParamValue<string>.Get(reader, Name),
                 PhoneNo = HandleOutputParamValue<int>.Get(reader, PhoneNo),
+                HireDate = HandleOutputParamValue<DateTime>.Get(reader, HireDate),
                 IsAdmin = HandleOutputParamValue<bool>.Get(reader, IsAdmin),
                 IsActive = HandleOutputParamValue<bool>.Get(reader, IsActive),
                 CreatedBy = HandleOutputParamValue<Guid>.Get(reader, CreatedBy),

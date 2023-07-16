@@ -21,6 +21,7 @@ export class EmployeeSkillComponent implements OnInit {
   dataShow: any = {
     id: "",
     name:"",
+    hireDate:"",
     phoneNo:0
   };
   tableData: any = [];
@@ -46,6 +47,7 @@ export class EmployeeSkillComponent implements OnInit {
     this.form = new FormGroup({
       name: new FormControl('', Validators.required),
       phoneNo: new FormControl('', [Validators.required, Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]),
+      hireDate: new FormControl('',Validators.required),
       skills: new FormControl([], [Validators.required, Validators.minLength(1)])
 
     });
@@ -54,6 +56,7 @@ export class EmployeeSkillComponent implements OnInit {
       id: new FormControl('', Validators.required),
       name: new FormControl('', Validators.required),
       phoneNo: new FormControl('', [Validators.required, Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]),
+      hireDate: new FormControl('',Validators.required),
       skills: new FormControl([], [Validators.required, Validators.minLength(1)])
     });
 
@@ -140,6 +143,9 @@ export class EmployeeSkillComponent implements OnInit {
 
   onView(data: any) {
     this.dataShow = JSON.parse(JSON.stringify(data));
+    console.log("Datashoiw:------------  "+this.dataShow)
+    this.editForm.controls['hireDate'].setValue(new Date(this.dataShow.hireDate));
+
     this.getEmployeeSkill(data.id);
   }
 
@@ -163,12 +169,13 @@ export class EmployeeSkillComponent implements OnInit {
     let params = {
       "name": this.form.controls['name'].value,
       "phoneNo": this.form.controls['phoneNo'].value,
+      "hiredate": this.form.controls['hireDate'].value,
       "skills": skillIds
     };
 
     this.loading = true;
 
-    // console.log("Add Skill:-----------  ", params);
+    console.log("Add Skill:-----------  ", params);
 
     // this.loading = false;
     // this.closeAddPop.nativeElement.click();
@@ -213,6 +220,7 @@ export class EmployeeSkillComponent implements OnInit {
       "id": this.editForm.controls['id'].value,
       "name": this.editForm.controls['name'].value,
       "phoneNo": this.editForm.controls['phoneNo'].value,
+      "hiredate": this.editForm.controls['hireDate'].value,
       "skills": skillIds
     };
 

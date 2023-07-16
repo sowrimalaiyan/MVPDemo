@@ -2,7 +2,7 @@
 <div class="main">
     <app-sidebar class="side-content"></app-sidebar>
     <div class="d-none mobile-sidebar-backdrop"></div>
-    <div class="main-content ps-4 pt-2">
+    <div class="main-content ps-4 pt-3">
         <div class="card-header d-flex justify-content-between me-3 pb-2 mb-3 border-bottom">
             <span>Job List</span>
             <button class="btn btn-basic text-primary p-1" data-bs-toggle="modal" data-bs-target="#add" (click)="onAddClick()">
@@ -41,7 +41,7 @@
                         S.No.
                     </th>
                     <th [pSortableColumn]="'name'"><p-sortIcon [field]="'name'"></p-sortIcon>
-                        Job
+                        Job Name
                         <p-columnFilter type="text" field="name" display="menu" [showAddButton]="false" class="p-ml-auto"></p-columnFilter>
 
                     </th>

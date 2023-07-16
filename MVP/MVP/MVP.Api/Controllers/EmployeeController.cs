@@ -48,7 +48,7 @@ namespace MVP.Api.Controllers
                     _logger.LogError(Obj.Errors.ErrorMessage);
                     return BadRequest(Obj.Errors.ErrorMessage);
                 }
-                return Ok(Obj.Data);
+                return Ok(Obj.Data.Where(obj => obj.IsActive).ToList());
             }
             catch (Exception ex)
             {
@@ -69,6 +69,7 @@ namespace MVP.Api.Controllers
                         Id = Guid.NewGuid(),
                         Name = Data.Name,
                         PhoneNo = Data.PhoneNo,
+                        HireDate = Data.HireDate,
                         IsAdmin = false,
                         IsActive = true,
                         CreatedAt = DateTime.Now,
@@ -106,6 +107,7 @@ namespace MVP.Api.Controllers
                         Id = Data.Id,
                         Name = Data.Name,
                         PhoneNo = Data.PhoneNo,
+                        HireDate = Data.HireDate,
                         IsAdmin = false,
                         IsActive = true,
                         CreatedAt = DateTime.Now,

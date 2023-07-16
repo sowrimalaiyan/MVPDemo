@@ -7,6 +7,9 @@ namespace MVP.BusinessEntities
         public string Name { get; set; }
 
         public Int64 PhoneNo { get; set; }
+
+        public DateTime HireDate { get; set; }
+        
     }
 
     public class EmployeeRequestEntity : EmployeeInsertRequestEntity
