@@ -48,7 +48,7 @@ namespace MVP.Api.Controllers
                     _logger.LogError(Obj.Errors.ErrorMessage);
                     return BadRequest(Obj.Errors.ErrorMessage);
                 }
-                return Ok(Obj.Data);
+                return Ok(Obj.Data.Where(obj => obj.IsActive).ToList());
             }
             catch (Exception ex)
             {
