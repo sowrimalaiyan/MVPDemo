@@ -3,6 +3,7 @@
         "id":1,
         "name": "Employee 1",
         "phoneNo": 88765788989,
+        "hiring":"2023-07-14",
         "skills":[
             {
                 "id":1
@@ -16,6 +17,7 @@
         "id":2,
         "name": "Employee 2",
         "phoneNo": 778865578,
+        "hiring":"2023-07-04",
         "skills":[
             {
                 "id":2
@@ -29,6 +31,7 @@
         "id":3,
         "name": "Employee 3",
         "phoneNo": 998656789,
+        "hiring":"2023-07-01",
         "skills":[
             {
                 "id":1

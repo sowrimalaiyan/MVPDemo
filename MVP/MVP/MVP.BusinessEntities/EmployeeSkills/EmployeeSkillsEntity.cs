@@ -10,6 +10,8 @@ namespace MVP.BusinessEntities
 
         public Int64 PhoneNo { get; set; }
 
+        public DateTime HireDate { get; set; }
+
         public List<SkillIdEntity> Skills { get; set; }
     }
 

@@ -17,6 +17,8 @@ namespace MVP.EntityRepositories
 
         private const string PhoneNo = "PhoneNo";
 
+        private const string HireDate = "HireDate"; 
+
         private const string IsAdmin = "IsAdmin";
 
         private const string IsActive = "IsActive";
@@ -81,7 +83,7 @@ namespace MVP.EntityRepositories
         {
             if (reader != null)
             {
-                GetApplicationConfig(reader);
+                GetEmployee(reader);
             }
         }
 
@@ -89,7 +91,7 @@ namespace MVP.EntityRepositories
         {
             if (reader != null)
             {
-                await GetApplicationConfigAsync(reader);
+                await GetEmployeeAsync(reader);
             }
         }
 
@@ -129,39 +131,40 @@ namespace MVP.EntityRepositories
 
         #region  Helper Method for Retrieving Data 
 
-        public async Task<List<EmployeeEntity>> GetApplicationConfigAsync(SqlDataReader reader)
+        public async Task<List<EmployeeEntity>> GetEmployeeAsync(SqlDataReader reader)
         {
             Lists = new List<EmployeeEntity>();
             if (reader != null)
             {
                 while (await reader.ReadAsync())
                 {
-                    Lists.Add(BindApplicationConfigDetails(reader));
+                    Lists.Add(BindEmployeeDetails(reader));
                 }
             }
             return Lists;
         }
 
-        public List<EmployeeEntity> GetApplicationConfig(SqlDataReader reader)
+        public List<EmployeeEntity> GetEmployee(SqlDataReader reader)
         {
             Lists = new List<EmployeeEntity>();
             if (reader != null)
             {
                 while (reader.Read())
                 {
-                    Lists.Add(BindApplicationConfigDetails(reader));
+                    Lists.Add(BindEmployeeDetails(reader));
                 }
             }
             return Lists;
         }
 
-        public EmployeeEntity BindApplicationConfigDetails(SqlDataReader reader)
+        public EmployeeEntity BindEmployeeDetails(SqlDataReader reader)
         {
             EmployeeEntity ge = new EmployeeEntity
             {
                 Id = HandleOutputParamValue<Guid>.Get(reader, Id),
                 Name = HandleOutputParamValue<string>.Get(reader, Name),
                 PhoneNo = HandleOutputParamValue<Int64>.Get(reader, PhoneNo),
+                HireDate = HandleOutputParamValue<DateTime>.Get(reader, HireDate),
                 IsAdmin = HandleOutputParamValue<bool>.Get(reader, IsAdmin),
                 IsActive = HandleOutputParamValue<bool>.Get(reader, IsActive),
                 CreatedBy = HandleOutputParamValue<Guid>.Get(reader, CreatedBy),

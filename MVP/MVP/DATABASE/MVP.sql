@@ -30,6 +30,7 @@ BEGIN
 		Id			UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,
 		Name		VARCHAR(50)     NOT NULL,
 		PhoneNo     BIGINT,
+		HireDate    DATE,
 		IsAdmin		BIT DEFAULT(0),
 		IsActive	BIT DEFAULT(1),
 		CreatedBy	UNIQUEIDENTIFIER,
@@ -277,6 +278,7 @@ CREATE PROCEDURE dbo.usp_insertemployee
 	@Id			UNIQUEIDENTIFIER,
 	@Name		VARCHAR(50),
 	@PhoneNo    BIGINT,
+	@HireDate   DATE,
 	@IsAdmin    BIT,
 	@CreatedBy	UNIQUEIDENTIFIER,
 	@UpdatedBy	UNIQUEIDENTIFIER,
@@ -295,6 +297,7 @@ AS BEGIN TRY
 		Id,			
 		Name, 
 		PhoneNo,   
+		HireDate,
 		IsAdmin,
 		CreatedBy,	
 		UpdatedBy		
@@ -303,7 +306,8 @@ AS BEGIN TRY
 	(
 		@Id,			
 		@Name,
-		@PhoneNo,   
+		@PhoneNo, 
+		@HireDate,
 		@IsAdmin,
 		@CreatedBy,	
 		@UpdatedBy	
@@ -331,6 +335,7 @@ CREATE PROCEDURE dbo.usp_updateemployee
 	@Id				UNIQUEIDENTIFIER,
 	@Name			VARCHAR(50),
 	@PhoneNo		BIGINT,
+	@HireDate		DATE,
 	@IsAdmin		BIT,
 	@UpdatedBy		UNIQUEIDENTIFIER,
 	@PrimaryID		UNIQUEIDENTIFIER OUTPUT,
@@ -347,6 +352,7 @@ AS BEGIN TRY
 	SET
 		Name = @Name,  
 		PhoneNo = @PhoneNo,
+		HireDate = @HireDate,
 		IsAdmin = @IsAdmin,
 		UpdatedBy = @UpdatedBy,
 		UpdatedAt = GETDATE()
@@ -420,7 +426,7 @@ AS BEGIN TRY
 
 	SET NOCOUNT ON;
 
-	SELECT  Id, Name, PhoneNo,IsAdmin, IsActive, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt	
+	SELECT  Id, Name, PhoneNo, HireDate, IsAdmin, IsActive, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt	
 	FROM Employee 
 	WHERE (@Id IS NULL OR Id = @Id) AND (@Name IS NULL OR Name like '%' + @Name + '%')
 
@@ -759,6 +765,7 @@ CREATE PROCEDURE dbo.usp_insertemployeeskill
 	@Id				UNIQUEIDENTIFIER,
 	@Name			VARCHAR(50),
 	@PhoneNo		BIGINT,
+	@HireDate		DATE,
 	@IsAdmin		BIT,
 	@Skills			[UDT_Skill] READONLY,
 	@CreatedBy		UNIQUEIDENTIFIER,
@@ -773,7 +780,7 @@ AS BEGIN TRY
 	Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
 	SET NOCOUNT ON;
 
-		EXEC dbo.usp_insertemployee @Id, @Name, @PhoneNo, @IsAdmin, @CreatedBy, @UpdatedBy, @PrimaryID, @ErrorMessage
+		EXEC dbo.usp_insertemployee @Id, @Name, @PhoneNo, @HireDate, @IsAdmin, @CreatedBy, @UpdatedBy, @PrimaryID, @ErrorMessage
 
 		INSERT INTO EMPLOYEESKILLS (Id, EmpId, SkillId, CreatedBy)
 		SELECT NEWID(), @Id, Id, @CreatedBy FROM @Skills
@@ -801,6 +808,7 @@ CREATE PROCEDURE dbo.usp_updateemployeeskill
 	@Id				UNIQUEIDENTIFIER,
 	@Name			VARCHAR(50),
 	@PhoneNo		BIGINT,
+	@HireDate		DATE,
 	@IsAdmin		BIT,
 	@Skills			[UDT_Skill] READONLY,
 	@UpdatedBy		UNIQUEIDENTIFIER,
@@ -816,7 +824,7 @@ AS BEGIN TRY
 
 		DELETE EMPLOYEESKILLS WHERE EmpId = @Id
 
-		EXEC dbo.usp_updateemployee @Id, @Name, @PhoneNo, @IsAdmin, @UpdatedBy, @PrimaryID, @ErrorMessage
+		EXEC dbo.usp_updateemployee @Id, @Name, @PhoneNo, @HireDate, @IsAdmin, @UpdatedBy, @PrimaryID, @ErrorMessage
 
 		INSERT INTO EMPLOYEESKILLS (Id, EmpId, SkillId, CreatedBy)
 		SELECT NEWID(), @Id, Id, @UpdatedBy FROM @Skills

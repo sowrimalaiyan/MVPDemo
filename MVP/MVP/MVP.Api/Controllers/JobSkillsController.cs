@@ -155,7 +155,7 @@ namespace MVP.Api.Controllers
 
         [HttpPost]
         [Route("delete")]
-        public async Task<ActionResult> DeleteAsync(Guid Id)
+        public async Task<ActionResult> DeleteAsync(SkillIdEntity entity)
         {
             try
             {
@@ -163,7 +163,7 @@ namespace MVP.Api.Controllers
                 {
                     Input = new JobSkillsEntity
                     {
-                        Id = Id,
+                        Id = entity.Id,
                         UpdatedBy = Guid.NewGuid()
                     },
                     ClientUserInfo = _clientInfo

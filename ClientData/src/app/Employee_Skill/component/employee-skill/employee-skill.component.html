@@ -2,7 +2,7 @@
 <div class="main">
     <app-sidebar class="side-content"></app-sidebar>
     <div class="d-none mobile-sidebar-backdrop"></div>
-    <div class="main-content ps-4 pt-2">
+    <div class="main-content ps-4 pt-3">
         <div class="card-header d-flex justify-content-between me-3 pb-2 mb-3 border-bottom">
             <span>Employee Skills List</span>
             <button class="btn btn-basic text-primary p-1" data-bs-toggle="modal" data-bs-target="#add" (click)="onAddClick()">
@@ -41,13 +41,18 @@
                         S.No.
                     </th>
                     <th [pSortableColumn]="'name'"><p-sortIcon [field]="'name'"></p-sortIcon>
-                        Employee
+                        Employee Name
                         <p-columnFilter type="text" field="name" display="menu" [showAddButton]="false" class="p-ml-auto"></p-columnFilter>
 
                     </th>
                     <th [pSortableColumn]="'phoneNo'"><p-sortIcon [field]="'phoneNo'"></p-sortIcon>
                         Phone Number
                         <p-columnFilter type="text" field="phoneNo" display="menu" [showAddButton]="false" class="p-ml-auto"></p-columnFilter>
+
+                    </th>
+                    <th [pSortableColumn]="'hireDate'"><p-sortIcon [field]="'hireDate'"></p-sortIcon>
+                        Hiring Date
+                        <p-columnFilter type="text" field="hireDate" display="menu" [showAddButton]="false" class="p-ml-auto"></p-columnFilter>
 
                     </th>
                     <!-- <th [pSortableColumn]="'skills'"><p-sortIcon [field]="'skills'"></p-sortIcon>
@@ -70,6 +75,9 @@
                     </td>
                     <td>
                         {{ data.phoneNo }}
+                    </td>
+                    <td>
+                        {{ data.hireDate.toString() | date:'longDate' }}
                     </td>
                     <!-- <td>
                         {{getColumnContent(data.skills)}}
@@ -112,6 +120,7 @@
                                             Please enter a name.
                                           </div>
                                 </div>
+                                
                                 <div class="form-floating mb-3">
                                     <input type="number" class="form-control w-100" formControlName="phoneNo" id="phoneNo"
                                         placeholder="Enter Phone Number" required>
@@ -122,6 +131,15 @@
 
                                 </div>
 
+                                <div class="form-floating mb-3">
+
+                                    <input type="date" class="form-control w-100" formControlName="hireDate" id="hireDate"
+                                        placeholder="Enter Hiring Date" required>
+                                        <label class="text-muted mb-1" for="hireDate">Hiring Date<span class="text-danger">*</span></label>
+                                        <div class="invalid-feedback">
+                                            Please enter a hiring date.
+                                          </div>
+                                </div>
                                 <div class="form-floating mb-3">
                                     <p-multiSelect class="" #multiProjects formControlName="skills" id="skills" [options]="dropdownData" optionLabel="name"
                                          placeholder="Select Skills" [showToggleAll]="true" name="skills"> 
@@ -173,16 +191,24 @@
                                             Please enter a name.
                                           </div>
                                 </div>
+                                                                
                                 <div class="form-floating mb-3">
                                     <input type="number" class="form-control w-100" formControlName="phoneNo" id="phoneNo"
                                         [(ngModel)]="dataShow.phoneNo" placeholder="Enter Phone Number" required>
-
                                         <label class="text-muted mb-1" for="phoneNo">Phone number<span class="text-danger">*</span></label>
                                         <div class="invalid-feedback">
                                             Please enter a phone number.
                                           </div>
                                 </div>
+                                <div class="form-floating mb-3">
 
+                                    <input type="date" class="form-control w-100" formControlName="hireDate" id="hireDate"
+                                    [ngModel]="dataShow.hireDate | date:'yyyy-MM-dd'" placeholder="Enter Hiring Date" required>
+                                        <label class="text-muted mb-1" for="hireDate">Hiring Date<span class="text-danger">*</span></label>
+                                        <div class="invalid-feedback">
+                                            Please enter a hiring date.
+                                          </div>
+                                </div>
                                 <div class="form-floating mb-3">
                                     <p-multiSelect class="" #multiProjects formControlName="skills" id="skills" [options]="dropdownData" optionLabel="name"
                                          placeholder="Select Skills" [showToggleAll]="true" name="skills"> 
@@ -232,14 +258,20 @@
                                         <label class="text-muted mb-1" for="name">Name</label>
 
                                 </div>
+                                
                                 <div class="form-floating mb-3">
                                     <input type="number" class="form-control w-100" formControlName="phoneNo" id="phoneNo"
                                         [(ngModel)]="dataShow.phoneNo" [readonly]="true" placeholder="Enter Phone Number"
                                         required>
                                     <label class="text-muted mb-1" for="phoneNo">Phone number</label>
 
+                                </div>                               
+                                <div class="form-floating mb-3">
+                                    <input type="date" class="form-control w-100" formControlName="hireDate" id="hireDate"
+                                    [ngModel]="dataShow.hireDate | date:'yyyy-MM-dd'" placeholder="Enter Hiring Date" [readonly]="true" required>
+                                        <label class="text-muted mb-1" for="hireDate">Hiring Date<span class="text-danger">*</span></label>
+                                        
                                 </div>
-
                                 <div class="form-floating mb-3">
 
                                     <p-multiSelect class="bg-light text-muted" #multiProjects formControlName="skills" id="skills" [options]="dropdownData" optionLabel="name"

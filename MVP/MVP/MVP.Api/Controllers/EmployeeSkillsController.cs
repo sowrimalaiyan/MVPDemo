@@ -81,6 +81,7 @@ namespace MVP.Api.Controllers
                         Id = Guid.NewGuid(),
                         Name = Data.Name,
                         PhoneNo = Data.PhoneNo,
+                        HireDate = Data.HireDate,
                         IsAdmin = false,
                         IsActive = true,
                         CreatedAt = DateTime.Now,
@@ -129,6 +130,7 @@ namespace MVP.Api.Controllers
                         Id = Data.Id,
                         Name = Data.Name,
                         PhoneNo = Data.PhoneNo,
+                        HireDate = Data.HireDate,
                         IsAdmin = false,
                         IsActive = true,
                         CreatedAt = DateTime.Now,
@@ -156,7 +158,7 @@ namespace MVP.Api.Controllers
 
         [HttpPost]
         [Route("delete")]
-        public async Task<ActionResult> DeleteAsync(Guid Id)
+        public async Task<ActionResult> DeleteAsync(SkillIdEntity entity)
         {
             try
             {
@@ -164,7 +166,7 @@ namespace MVP.Api.Controllers
                 {
                     Input = new EmployeeSkillsEntity
                     {
-                        Id = Id,
+                        Id = entity.Id,
                         UpdatedBy = Guid.NewGuid()
                     },
                     ClientUserInfo = _clientInfo
